@@ -1,0 +1,196 @@
+if game.PlaceId == 8750997647 then
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+local Player = game.Players.LocalPlayer
+local Window = OrionLib:MakeWindow({Name = "Key System", HidePremium = false, IntroEnabled = false, SaveConfig = true, ConfigFolder = "Unikeyconf"})
+
+OrionLib:MakeNotification({
+	Name = "Logged in!",
+	Content = "You are logged in as "..Player.Name..".",
+	Image = "rbxassetid://4483345998",
+	Time = 5
+})
+
+--KeyValues
+_G.Key = "test"
+_G.KeyInput = "string"
+
+function MakeScriptHub()
+	local Window = OrionLib:MakeWindow({Name = "Tapping Legends hub", HidePremium = false, IntroText = "Tapping Hub", SaveConfig = true, ConfigFolder = "Uniconf"})
+end
+
+function DestroyKeyHub()
+	game.CoreGui.Orion:Destroy()
+end
+
+function CorrectKeyNotification()
+		OrionLib:MakeNotification({
+		Name = "Correct Key!",
+		Content = "You have entered the correct key!",
+		Image = "rbxassetid://4483345998",
+		Time = 5
+	})
+end
+
+function InCorrectKeyNotification()
+		OrionLib:MakeNotification({
+		Name = "InCorrect Key!",
+		Content = "You have entered the incorrect key!",
+		Image = "rbxassetid://4483345998",
+		Time = 5
+	})
+end
+
+local KTab = Window:MakeTab({
+	Name = "Key",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+KTab:AddTextbox({
+	Name = "Enter Key",
+	Default = "",
+	TextDisappear = true,
+	Callback = function(Value)
+		_G.KeyInput = Value
+	end	  
+})
+
+KTab:AddButton({
+	Name = "Check Key",
+	Callback = function()
+      	if _G.KeyInput == _G.key then
+		DestroyKeyHub()
+		MakeScriptHub()
+		CorrectKeyNotification()
+		else
+			IncorrectKeyNotification()
+		end
+  	end    
+})
+
+--Values
+_G.autoTap = true
+_G.autoRebirth = true
+_G.autoHatch = true
+_G.selectEgg = "Basic Egg"
+_G.autoEquipBest = true
+
+
+--Functions
+
+function autoTap()
+	while _G.autoTap == true do
+		game:GetService("ReplicatedStorage").Remotes.Tap:FireServer()
+		wait(.0000000000000000000000000000000000000000000000000000000000000001)
+	 end
+	end
+
+function autoRebirth()
+	while _G.autoRebirth == true do
+		game:GetService("ReplicatedStorage").Remotes.Rebirth:FireServer(1)
+		wait(.0000000000000000000000000000000000000000000000000000000000000001)
+	 end
+	end
+
+function autoHatch()
+	while _G.autoHatch == true do
+		game:GetService("ReplicatedStorage").Remotes.BuyEgg:InvokeServer(_G.selectedEgg,1)
+		wait(.0000000000000000000000000000000000000000000000000000000000000001)
+	 end
+	end
+
+function equipBest()
+	game:GetService("ReplicatedStorage").Remotes.UnequipAll:InvokeServer()
+	game:GetService("ReplicatedStorage").Remotes.EquipBest:InvokeServer()
+	end
+end
+
+function autoequipBest()
+	while _G.autoEquipBest == true do
+	game:GetService("ReplicatedStorage").Remotes.UnequipAll:InvokeServer()
+	game:GetService("ReplicatedStorage").Remotes.EquipBest:InvokeServer()
+	wait(30)
+	end
+end
+
+--Tabs
+local FarmTab = Window:MakeTab({
+	Name = "AutoFarm",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+local EggsTab = Window:MakeTab({
+	Name = "Eggs",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+local MiscTab = Window:MakeTab({
+	Name = "Misc",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+--Toggles
+FarmTab:AddToggle({
+	Name = "AutoTap",
+	Default = false,
+	Callback = function(Value)
+		_G.autoTap == Value
+		autoTap()
+	end    
+})
+
+FarmTab:AddToggle({
+	Name = "AutoRebirth",
+	Default = false,
+	Callback = function(Value)
+		_G.autoRebirth == Value
+		autoRebirth()
+	end    
+})
+
+EggsTab:AddLabel("You need to be near the egg in order for AutoHatch to work.")
+
+
+EggsTab:AddToggle({
+	Name = "AutoHatch",
+	Default = false,
+	Callback = function(Value)
+		_G.autoHatch == Value
+		autohatch()
+	end    
+})
+
+MiscTab:AddToggle({
+	Name = "AutoEquipBestPets",
+	Default = false,
+	Callback = function(Value)
+		_G.autoEquipBest == Value
+		autoEquipBest()
+	end    
+})
+
+MiscTab:AddButton({
+	Name = "EquipBestPets",
+	Callback = function()
+      		equipBest()
+  	end    
+})
+
+
+
+--dropdowns
+EggsTab:AddDropdown({
+	Name = "SelectEgg",
+	Default = "Basic Egg",
+	Options = {"Basic Egg", "Rare Egg"},
+	Callback = function(Value)
+		_G.selectEgg = Value
+		print(_G.selectEgg)
+	end    
+})
+
+
+OrionLib:Init()
